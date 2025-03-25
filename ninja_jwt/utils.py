@@ -6,10 +6,15 @@ from importlib import import_module
 
 from django.conf import settings
 from django.utils.functional import lazy
-from django.utils.timezone import is_naive, make_aware, utc
-from six import string_types
+from django.utils.timezone import is_naive, make_aware
 
 from ninja_jwt import exceptions
+
+try:
+    from datetime import timezone
+except ImportError:
+    from django.utils import timezone
+
 
 logger = logging.getLogger("django")
 
@@ -32,7 +37,7 @@ def import_callable(path_or_callable):
     if callable(path_or_callable):
         return path_or_callable
     else:
-        assert isinstance(path_or_callable, string_types)
+        assert isinstance(path_or_callable, str)
         package, attr = path_or_callable.rsplit(".", 1)
         packages = import_module(package)
         return getattr(packages, attr)
@@ -40,13 +45,17 @@ def import_callable(path_or_callable):
 
 def make_utc(dt):
     if settings.USE_TZ and is_naive(dt):
-        return make_aware(dt, timezone=utc)
+        return make_aware(dt, timezone=timezone.utc)
 
     return dt
 
 
 def aware_utcnow():
-    return make_utc(datetime.utcnow())
+    dt = datetime.now(tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def datetime_to_epoch(dt):
@@ -54,7 +63,11 @@ def datetime_to_epoch(dt):
 
 
 def datetime_from_epoch(ts):
-    return make_utc(datetime.utcfromtimestamp(ts))
+    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+    if not settings.USE_TZ:
+        dt = dt.replace(tzinfo=None)
+
+    return dt
 
 
 def format_lazy(s, *args, **kwargs):

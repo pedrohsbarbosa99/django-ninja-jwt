@@ -10,14 +10,17 @@
 
 ## Abstract
 
-Ninja JWT is JSON Web Token plugin for Django-Ninja. The library is a fork of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband, a popular  JWT plugin for [Django REST Framework](http://www.django-rest-framework.org).
+Ninja JWT is a JSON Web Token (JWT) plugin for Django-Ninja.
+This library is a fork of [Simple JWT](https://github.com/jazzband/djangorestframework-simplejwt) by Jazzband,
+a widely-used JWT plugin for the [Django REST Framework](http://www.django-rest-framework.org).
 
 #### Notice
-This library does not fix any issues from the source SIMPLE JWT. 
-It only added support for Django-Ninja and removes DRF dependencies. And time after time, subsequent updates from SIMPLE JWT will reflect here.
 
-For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
+This library does not address any issues present in the original SIMPLE JWT.
+It only adds support for Django-Ninja and removes dependencies on DRF.
+Subsequent updates from SIMPLE JWT will be reflected here over time.
 
+For full documentation, [visit this page](https://eadwincode.github.io/django-ninja-jwt/).
 #### Requirements
 - Python >= 3.6
 - Django >= 2.1
@@ -28,14 +31,15 @@ For full documentation, [visit](https://eadwincode.github.io/django-ninja-jwt/).
 Checkout this sample project: https://github.com/eadwinCode/bookstoreapi
 
 
-Installation
-============
+## Installation
 
 Ninja JWT can be installed with pip:
 
-    pip install django-ninja-jwt
+```shell
+pip install django-ninja-jwt
+```
 
-Also, you need to register `NinjaJWTDefaultController` controller to your Django-Ninja api.
+You also need to register the `NinjaJWTDefaultController` controller to your Django-Ninja API:
 
 ```python
 from ninja_jwt.controller import NinjaJWTDefaultController
@@ -43,12 +47,11 @@ from ninja_extra import NinjaExtraAPI
 
 api = NinjaExtraAPI()
 api.register_controllers(NinjaJWTDefaultController)
-
 ```
 
-The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`. 
-It is a combination of two subclasses `TokenVerificationController` and `TokenObtainPairController`.
-If you wish to customize these routes, you can inherit from these controllers and change its implementation
+The `NinjaJWTDefaultController` includes three routes: `obtain_token`, `refresh_token`, and `verify_token`.
+It combines two subclasses, `TokenVerificationController` and `TokenObtainPairController`.
+If you want to customize these routes, you can inherit from these controllers and modify their implementation:
 
 ```python
 from ninja_extra import api_controller
@@ -56,13 +59,12 @@ from ninja_jwt.controller import TokenObtainPairController
 
 @api_controller('token', tags=['Auth'])
 class MyCustomController(TokenObtainPairController):
-    """obtain_token and refresh_token only"
-...
+    """obtain_token and refresh_token only"""
+    ...
 api.register_controllers(MyCustomController)
 ```
 
-If you wish to use localizations/translations, simply add `ninja_jwt` to
-`INSTALLED_APPS`.
+To use localizations/translations, add `ninja_jwt` to your `INSTALLED_APPS`:
 
 ```python
 INSTALLED_APPS = [
@@ -72,8 +74,13 @@ INSTALLED_APPS = [
 ]
 ```
 
-Usage
-=====
+## Using Ninja Router
+
+If you prefer not to follow the NinjaExtra methodology,
+refer to this [documentation](https://eadwincode.github.io/django-ninja-jwt/customizing_token_claims/#use-django-ninja-router)
+on how to use `Ninja-JWT` with `Django-Ninja Router`.
+
+## Usage
 
 To verify that Ninja JWT is working, you can use curl to issue a couple
 of test requests:
@@ -109,7 +116,7 @@ curl \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImNvbGRfc3R1ZmYiOiLimIMiLCJleHAiOjIzNDU2NywianRpIjoiZGUxMmY0ZTY3MDY4NDI3ODg5ZjE1YWMyNzcwZGEwNTEifQ.aEoAYkSJjoWH1boshQAaTkf8G3yn0kapko6HFRt7Rh4"}' \
-  http://localhost:8000/api/token/refresh/
+  http://localhost:8000/api/token/refresh
 
 ...
 {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}

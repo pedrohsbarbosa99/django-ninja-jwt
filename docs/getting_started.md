@@ -15,7 +15,7 @@ Ninja JWT can be installed with pip:
 
     pip install django-ninja-jwt
 
-Also, you need to register `NinjaJWTDefaultController` controller to you Django-Ninja api.
+Also, you need to register `NinjaJWTDefaultController` controller to your Django-Ninja api.
 The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`
 
 ```python
@@ -27,7 +27,7 @@ api.register_controllers(NinjaJWTDefaultController)
 
 ```
 
-The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`. 
+The `NinjaJWTDefaultController` comes with three routes `obtain_token`, `refresh_token` and `verify_token`.
 It is a combination of two subclass `TokenVerificationController` and `TokenObtainPairController`.
 If you wish to customize these routes, you can inherit from these controllers and change its implementation
 
@@ -37,7 +37,7 @@ from ninja_jwt.controller import TokenObtainPairController
 
 @api_controller('token', tags=['Auth'])
 class MyCustomController(TokenObtainPairController):
-    """obtain_token and refresh_token only"
+    """obtain_token and refresh_token only"""
 ...
 api.register_controllers(MyCustomController)
 ```
@@ -53,8 +53,13 @@ INSTALLED_APPS = [
 ]
 ```
 
-Usage
-=====
+## Using Ninja Router
+
+If you prefer not to follow the NinjaExtra methodology,
+refer to this [documentation](https://eadwincode.github.io/django-ninja-jwt/customizing_token_claims/#use-django-ninja-router)
+on how to use `Ninja-JWT` with `Django-Ninja Router`.
+
+## Usage
 
 To verify that Ninja JWT is working, you can use curl to issue a couple
 of test requests:
@@ -93,11 +98,10 @@ curl \
   http://localhost:8000/api/token/refresh/
 
 ...
-{"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiY29sZF9zdHVmZiI6IuKYgyIsImV4cCI6MTIzNTY3LCJqdGkiOiJjNzE4ZTVkNjgzZWQ0NTQyYTU0NWJkM2VmMGI0ZGQ0ZSJ9.ekxRxgb9OKmHkfy-zs1Ro_xs1eMLXiR17dIDBVxeT-w"}
+{"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoiYWNjZX...", "refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3BrIjoxLCJ0b2tlbl90eXBlIjoicmVm..."}
 ```
 
-Cryptographic Dependencies (Optional)
--------------------------------------
+## Cryptographic Dependencies (Optional)
 
 If you are planning on encoding or decoding tokens using certain digital
 signature algorithms (i.e. RSA and ECDSA; visit PyJWT for other algorithms), you will need to install the
@@ -107,7 +111,7 @@ extra in the `django-ninja-jwt` requirement:
     pip install django-ninja-jwt[crypto]
 
 
-The `django-ninja-jwt[crypto]` format is recommended in requirements
+The `django-ninja-jwt[crypto]` format is recommended in requirement
 files in projects using `Ninja JWT`, as a separate `cryptography` requirement
 line may later be mistaken for an unused requirement and removed.
 [cryptography](https://cryptography.io)
